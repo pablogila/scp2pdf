@@ -9,7 +9,7 @@ from jinja2 import Environment, FileSystemLoader
 from weasyprint import HTML
 
 
-VERSION = "v1.0.2"
+VERSION = "v1.0.3"
 
 
 def _fetch_html(url):
@@ -65,8 +65,14 @@ def _process_document_content(raw_html, base_url, fallback_title):
     # Extract Core Metadata
     item_match = re.search(r'(?:Item|SCP)\s*#?:\s*([^\n<]+)', text, re.IGNORECASE)
     class_match = re.search(r'(?:Object|Containment) Class:\s*([A-Za-z0-9/\-]+)', text, re.IGNORECASE)
+    is_scp = bool(class_match or item_match or re.search(r'/scp-\d+', base_url.lower()))
 
     item_number = item_match.group(1).strip() if item_match else fallback_title
+
+    # Prepend "SCP-" if the author did not include it in the name
+    if is_scp and re.match(r'^[0-9]', item_number):
+        item_number = f"SCP-{item_number}"
+        
     object_class = class_match.group(1).strip().title() if class_match else "N/A"
 
     # Pull ACS variables
@@ -187,7 +193,7 @@ def _process_document_content(raw_html, base_url, fallback_title):
         "main_citation": main_citation,
         "supp_citations": supp_citations,
         "version": rev_match.group(1) if rev_match else "Unknown",
-        "is_scp": bool(class_match or item_match or re.search(r'/scp-\d+', base_url.lower()))
+        "is_scp": is_scp
     }
 
 

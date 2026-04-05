@@ -3,8 +3,9 @@
 A Python tool to generate clean, beautifully formatted PDFs from SCP Foundation Wiki entries and tales. It strips away UI elements, extracts relevant metadata, and supports custom themes and images.
 
 <p align="center">
-  <img width="40.0%" src="./examples/SCP-035.webp" style="margin-right: 10px;">
-  <img width="40.0%" src="./examples/SCP-6003.webp" style="margin-left: 10px;">
+  <img width="25.0%" src="./examples/SCP-682.png" style="margin-right: 10px;">
+  <img width="25.0%" src="./examples/SCP-682-bis.png" style="margin-right: 10px;">
+  <img width="25.0%" src="./examples/SCP-6003.png" style="margin-left: 10px;">
 </p>
 
 
