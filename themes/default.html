@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ item_number }}</title>
+    <style>
+        {{ css_content }}
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/SCP_Foundation_logo.svg/960px-SCP_Foundation_logo.svg.png" alt="SCP Foundation">
+        </div>
+        
+        <div class="metadata">
+            <table>
+                {% if is_scp %}
+                <tr class="meta-row-item">
+                    <td class="meta-label">Item #</td>
+                    <td class="meta-value">{{ item_number }}</td>
+                </tr>
+                {% if scp_name %}
+                <tr class="meta-row-description">
+                    <td class="meta-label">Description</td>
+                    <td class="meta-value">{{ scp_name }}</td>
+                </tr>
+                {% endif %}
+                <tr class="meta-row-object">
+                    <td class="meta-label">Object Class</td>
+                    <td class="meta-value">{{ object_class }}</td>
+                </tr>
+                {% if acs.disruption %}
+                <tr class="meta-row-disruption">
+                    <td class="meta-label">Disruption Class</td>
+                    <td class="meta-value">{{ acs.disruption }}</td>
+                </tr>
+                {% endif %}
+                {% if acs.risk %}
+                <tr class="meta-row-risk">
+                    <td class="meta-label">Risk Class</td>
+                    <td class="meta-value">{{ acs.risk }}</td>
+                </tr>
+                {% endif %}
+                {% if acs.secondary %}
+                <tr class="meta-row-secondary">
+                    <td class="meta-label">Secondary Class</td>
+                    <td class="meta-value">{{ acs.secondary }}</td>
+                </tr>
+                {% endif %}
+                
+                {% else %}
+                <tr class="meta-row-document">
+                    <td class="meta-label">Document</td>
+                    <td class="meta-value">{{ item_number }}</td>
+                </tr>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+    
+    <div class="header-divider"></div>
+    
+    <div class="document-content">
+        {% if image %}
+        <div class="scp-image-block">
+            <img src="{{ image }}" alt="Reference Image">
+            {% if caption %}
+            <div class="scp-image-caption">{{ caption }}</div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {{ content }}
+    </div>
+
+    <div class="citation-block">
+        <p><strong>Reference this report as:</strong></p>
+        {% if main_citation %}
+            {{ main_citation }}
+        {% else %}
+            <blockquote>"{{ item_number }}" from the SCP Wiki. Source: <a href="{{ source_url }}">{{ source_url }}</a>. Licensed under CC BY-SA.</blockquote>
+        {% endif %}
+        
+        <blockquote>Doc. v{{ document_version }} on {{ retrieval_date }} via https://github.com/pablogila/scp2pdf {{ scp2pdf_version }}</blockquote>
+
+        {% if supp_citations %}
+        <p><strong>Supplementary files:</strong></p>
+        {% for supp in supp_citations %}
+            {{ supp }}
+        {% endfor %}
+        {% endif %}
+    </div>
+</body>
+</html>
