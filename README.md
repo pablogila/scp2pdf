@@ -106,7 +106,7 @@ Themes with backgrounds have them randomized by default.
 
 Themes are controlled by matching HTML and CSS templates stored in the `themes/` directory.
 Custom backgrounds can also be included inside a folder with the same name as the HTML and CSS files.
-The background images can be randommly rotated and flipped with the
+The background images can be randomly rotated and flipped with the
 `theme-randomize` meta tag in the HTML template, see the `scan` theme as an example.
 
 
