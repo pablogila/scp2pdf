@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ item_number }}</title>
+    <meta name="theme-randomize" content="true">
+    <title>{% if scp_name %}{{ item_number }}: {{ scp_name }}{% else %}{{ item_number }}{% endif %}</title>
     <style>
         {{ css_content }}
         {{ bg_css }}
@@ -63,8 +64,7 @@
                 </tr>
                 {% endif %}
 
-                {% else %} <!-- Non-SCP entry; could be a log entry, tale, etc. -->
-                <tr class="meta-row-report">
+                {% else %} <tr class="meta-row-report">
                     <td class="meta-label">Report</td>
                     <td class="meta-value">{{ item_number }}</td>
                 </tr>

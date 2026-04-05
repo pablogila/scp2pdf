@@ -3,9 +3,9 @@
 A Python tool to generate clean, beautifully formatted PDFs from SCP Foundation Wiki entries and tales. It strips away UI elements, extracts relevant metadata, and supports custom themes and images.
 
 <p align="center">
-  <img width="25.0%" src="./examples/SCP-682.png" style="margin-right: 10px;">
-  <img width="25.0%" src="./examples/SCP-682-bis.png" style="margin-right: 10px;">
-  <img width="25.0%" src="./examples/SCP-6003.png" style="margin-left: 10px;">
+  <img width="30.0%" src="./pictures/SCP-035.png" style="margin-right: 10px;">
+  <img width="30.0%" src="./pictures/SCP-682.png" style="margin-right: 10px;">
+  <img width="30.0%" src="./pictures/SCP-6003.png" style="margin-left: 10px;">
 </p>
 
 
@@ -74,10 +74,40 @@ The `examples.py` script contains more usage examples,
 and it is used to generate the sample PDF files in the `examples/` directory.
 
 
-## Custom Themes
+## Themes
+
+If no theme is specified, the `report` theme will be used.
+Themes with backgrounds have them randomized by default.
+
+### report
+
+<p align="center"><img width="40.0%" src="./pictures/theme_report.png"></p>
+
+### book
+
+<p align="center"><img width="40.0%" src="./pictures/theme_book.png"></p>
+
+### scan
+
+<p align="center">
+  <img width="30.0%" src="./pictures/theme_scan_1.png" style="margin-right: 10px;">
+  <img width="30.0%" src="./pictures/theme_scan_2.png" style="margin-right: 10px;">
+</p>
+
+### wrinkled
+
+<p align="center">
+  <img width="30.0%" src="./pictures/theme_wrinkled_1.png" style="margin-right: 10px;">
+  <img width="30.0%" src="./pictures/theme_wrinkled_2.png" style="margin-right: 10px;">
+</p>
+
+
+## Custom themes
 
 Themes are controlled by matching HTML and CSS templates stored in the `themes/` directory.
-If no theme is specified, the `report` theme will be used by default.
+Custom backgrounds can also be included inside a folder with the same name as the HTML and CSS files.
+The background images can be randommly rotated and flipped with the
+`theme-randomize` meta tag in the HTML template, see the `scan` theme as an example.
 
 
 ## Contributing

@@ -1,0 +1,209 @@
+@page {
+    size: A4;
+    margin: 2cm 2cm 3cm 2cm; 
+
+    @bottom-left { content: none; }
+    @bottom-right { content: none; }
+
+    @bottom-center {
+        content: element(page-footer);
+        width: 100%;
+        vertical-align: bottom;
+    }
+}
+
+body {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 11pt;
+    line-height: 1.4;
+    color: #111;
+    background-color: transparent;
+}
+
+#page-footer {
+    position: running(page-footer);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; 
+    height: 100%;
+}
+
+.footer-row-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.footer-row-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    width: 100%;
+    padding-bottom: 20px;
+}
+
+.footer-scp-number {
+    flex: 1;
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.footer-classified {
+    flex: 1;
+    font-size: 25pt;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.footer-logo {
+    flex: 1;
+    text-align: right;
+}
+
+.footer-logo img {
+    width: 85px;
+    height: auto;
+}
+
+.footer-restricted {
+    font-size: 15pt;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.footer-page-number {
+    font-size: 11pt;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.footer-page-number::after {
+    content: "Page " counter(page) " of " counter(pages);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.logo img {
+    height: 110px; 
+    border: none;
+}
+
+.metadata {
+    margin-left: auto;
+    max-width: 60%;
+}
+
+.metadata table {
+    width: 320px;
+    max-width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 0 auto;
+}
+
+.metadata td {
+    border: none;
+    padding: 3px 0;
+    font-size: 11pt;
+}
+
+.meta-label {
+    text-align: left;
+    white-space: nowrap; 
+    padding-right: 15px;
+}
+
+.meta-value {
+    text-align: right;
+    font-weight: bold;
+    white-space: nowrap; 
+}
+
+.meta-row-description .meta-value {
+    white-space: normal;
+}
+
+.header-divider {
+    border-top: 4px solid #000;
+    border-bottom: 1px solid #000;
+    height: 2px;
+    margin-bottom: 20px;
+}
+
+.scp-image-block {
+    float: right;
+    margin: 0 0 15px 20px;
+    border: 2px solid #000;
+    max-width: 45%;
+    padding: 5px;
+    text-align: center;
+    font-size: 9pt;
+    background-color: transparent; 
+}
+
+.scp-image-block img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #000;
+}
+
+.scp-image-caption {
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.document-content p {
+    text-align: justify;
+}
+
+.pdf-collapsible-title {
+    font-size: 12pt;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+blockquote {
+    border: 2px solid #333;
+    background-color: transparent; 
+    padding: 15px;
+    margin: 15px 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    page-break-inside: avoid;
+    margin: 15px 0;
+}
+
+th, td {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: left;
+}
+
+.citation-block {
+    margin-top: 40px;
+    page-break-inside: avoid;
+    font-size: 10pt;
+}
+
+.citation-block blockquote {
+    border: none;
+    background-color: transparent;
+    padding: 0;
+    margin: 5px 0 15px 0;
+}

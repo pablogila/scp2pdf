@@ -11,10 +11,11 @@ from jinja2 import Environment, FileSystemLoader
 from weasyprint import HTML
 
 
-VERSION = "v1.1.2"
+VERSION = "v1.2.0"
 
 
 def _fetch_html(url):
+    """Fetches the raw HTML content from a given URL."""
     print(f"Fetching {url} ...")
     response = requests.get(url)
     response.raise_for_status()
@@ -22,6 +23,7 @@ def _fetch_html(url):
 
 
 def _fetch_scp_title(item_number):
+    """Scrapes the SCP Series hub to find the official title of the SCP."""
     try:
         match = re.search(r'(\d+)(-[A-Za-z]+)?', item_number.upper())
         if not match: return None
@@ -29,7 +31,7 @@ def _fetch_scp_title(item_number):
         num = int(match.group(1))
         target_text = f"SCP-{str(num).zfill(3)}{match.group(2) or ''}"
 
-        # Route to the correct hub page based on the SCP suffix/number
+        # Dynamically determine the correct hub URL
         url = "https://scp-wiki.wikidot.com/joke-scps" if '-J' in target_text \
             else "https://scp-wiki.wikidot.com/scp-ex" if '-EX' in target_text \
             else "https://scp-wiki.wikidot.com/scp-series" if num < 1000 \
@@ -37,7 +39,7 @@ def _fetch_scp_title(item_number):
 
         soup = BeautifulSoup(requests.get(url).text, 'html.parser')
 
-        # Find the exact link and extract the trailing description
+        # Locate the exact anchor tag and extract the title text
         for a_tag in soup.find_all('a', string=lambda text: text and text.strip().upper() == target_text):
             parent = a_tag.find_parent('li')
             if parent:
@@ -48,37 +50,43 @@ def _fetch_scp_title(item_number):
 
 
 def _parse_acs_class(match):
+    """Extracts the class name from an ACS regex match, ignoring placeholder text."""
     if not match: return None
     val = match.group(1).strip().title()
     return val if val.lower() not in ['none', 'n/a', 'pending'] else None
 
 
 def _process_document_content(raw_html, base_url, fallback_title):
+    """Clears Wikidot UI bloat from the HTML and extracts core document metadata."""
     soup = BeautifulSoup(raw_html, 'html.parser')
     content_div = soup.find(id='page-content')
     if not content_div: raise ValueError("Could not find the 'page-content' div.")
 
     text = content_div.get_text()
 
+    # Extract Core Metadata
     item_match = re.search(r'(?:Item|SCP)\s*#?:\s*([^\n<]+)', text, re.IGNORECASE)
     class_match = re.search(r'(?:Object|Containment) Class:\s*([A-Za-z0-9/\-]+)', text, re.IGNORECASE)
     is_scp = bool(class_match or item_match or re.search(r'/scp-\d+', base_url.lower()))
 
     item_number = item_match.group(1).strip() if item_match else fallback_title
 
+    # Prepend "SCP-" if the author did not include it in the name
     if is_scp and re.match(r'^[0-9]', item_number):
         item_number = f"SCP-{item_number}"
         
     object_class = class_match.group(1).strip().title() if class_match else "N/A"
 
+    # Pull ACS variables
     acs = {
         field.lower(): _parse_acs_class(re.search(fr'{field} Class:\s*([A-Za-z0-9/\-]+)', text, re.IGNORECASE))
         for field in ['Disruption', 'Risk', 'Secondary']
     }
 
-    # Separate the main article citation from supplementary file credits
+    # Process citations
     main_citation, supp_citations = "", []
 
+    # Locate the license box, or find it relative to "Cite this page as:"
     license_box = content_div.find('div', class_='licensebox') or \
                   next((n.find_parent('div', class_='collapsible-block') or n.find_parent('div') 
                         for n in content_div.find_all(string=re.compile("Cite this page as:"))), None)
@@ -93,7 +101,7 @@ def _process_document_content(raw_html, base_url, fallback_title):
                 supp_citations.append(str(bq))
         license_box.decompose()
 
-    # Strip Wikidot UI elements
+    # Strip Wikidot UI components
     purge_regex = re.compile(r'(credit|rate-box|page-rate|info-container|anom-bar|author-box|modalbox|wikiwalk)', re.IGNORECASE)
     for el in content_div.find_all(lambda tag: tag.has_attr('class') or tag.has_attr('id')):
         if el.attrs is None: 
@@ -107,27 +115,30 @@ def _process_document_content(raw_html, base_url, fallback_title):
         if purge_regex.search(css): 
             el.decompose()
 
-    # Unified cleanup pass for inline elements
+    # Tag cleanups and URL fixing
     for el in content_div.find_all(['div', 'a', 'span', 'p', 'img']):
         if not el.parent or el.attrs is None: 
-            continue
+            continue 
 
         el_text = el.get_text(strip=True)
         text_lower = el_text.lower()
 
-        # Target stray 'X' close buttons and custom narrative edit buttons
+        # Remove custom 'X' close buttons
         if el.name == 'div' and el.find('a', string=re.compile(r'^X$')) and len(el_text) < 200:
             el.decompose()
+        # Remove edit buttons
         elif el.name in ['div', 'a', 'span'] and ((text_lower == 'edit' and not el.find(['p', 'div', 'table'])) or 'administrator permission is required to edit this page' in text_lower):
             el.decompose()
+        # Remove redundant inline metadata headers
         elif el.name == 'p' and re.match(r'^((Item|SCP)\s*#?|(Object|Containment) Class):', el_text, re.IGNORECASE):
             el.decompose()
+        # Force absolute Image URLs
         elif el.name == 'img':
             src = el.get('src')
             if src and src.startswith('/'):
                 el['src'] = "https://scp-wiki.wikidot.com" + src
 
-    # Clean decorative headers and author intros
+    # Clean top-level HRs and author intros
     for child in content_div.find_all(recursive=False):
         if child.attrs is None: 
             continue
@@ -138,9 +149,9 @@ def _process_document_content(raw_html, base_url, fallback_title):
             if child_text and len(child_text) < 100 and (child_text.startswith('by ') or ': X' in child_text):
                 child.decompose()
             elif child_text:
-                break
+                break 
 
-    # Expand collapsibles for static PDF viewing while preserving their titles
+    # Process collapsibles
     for coll in content_div.find_all('div', class_='collapsible-block'):
         if coll.attrs is None: 
             continue
@@ -157,7 +168,6 @@ def _process_document_content(raw_html, base_url, fallback_title):
             folded_link = folded.find('a', class_='collapsible-block-link')
             if folded_link:
                 raw_title = folded_link.get_text(strip=True)
-                # Ignore generic UI instructions like "Show files"
                 if not raw_title.lstrip('+ -▷▶\n\r\t').strip().lower().startswith(('show', 'open', 'reveal', 'click')):
                     title_text = raw_title
 
@@ -189,7 +199,16 @@ def _process_document_content(raw_html, base_url, fallback_title):
     }
 
 
-def generate(target, theme="report", image=None, caption=None, outdir=None, randomize=True):
+def generate(target, theme="report", image=None, caption=None, outdir=None):
+    """
+    Compiles an SCP entry or tale into a styled PDF.
+
+    target (str): SCP number (e.g., '035') or full Wikidot URL.
+    theme (str): Name of the theme to load from the themes/ directory.
+    image (str): Optional URL or local path to a custom header image.
+    caption (str): Optional caption for the custom image.
+    outdir (str): Optional directory path to save the generated PDF.
+    """
     target = str(target).strip()
     print(f"\nProcessing SCP {target} ...")
 
@@ -197,13 +216,24 @@ def generate(target, theme="report", image=None, caption=None, outdir=None, rand
     themes_dir = os.path.join(base_dir, 'themes')
     css_path = os.path.join(themes_dir, f"{theme}.css")
     html_template = f"{theme}.html"
+    html_template_path = os.path.join(themes_dir, html_template)
 
-    if not os.path.exists(css_path) or not os.path.exists(os.path.join(themes_dir, html_template)):
+    if not os.path.exists(css_path) or not os.path.exists(html_template_path):
         raise FileNotFoundError(f"Theme '{theme}' files not found in {themes_dir}")
 
     if image and not image.startswith(('http://', 'https://')):
         image = f"file://{os.path.abspath(image)}"
 
+    # Parse template to extract theme configurations
+    with open(html_template_path, 'r', encoding='utf-8') as f:
+        template_content = f.read()
+
+    soup_template = BeautifulSoup(template_content, 'html.parser')
+
+    meta_rand = soup_template.find('meta', {'name': 'theme-randomize'})
+    theme_randomize = meta_rand and meta_rand.get('content', '').lower() == 'true'
+
+    # Dynamic background Logic
     bg_css = ""
     temp_dir = None
     theme_folder_path = os.path.join(themes_dir, theme)
@@ -211,19 +241,18 @@ def generate(target, theme="report", image=None, caption=None, outdir=None, rand
     if os.path.isdir(theme_folder_path):
         valid_exts = ('.png', '.jpg', '.jpeg', '.svg')
         files = [f for f in os.listdir(theme_folder_path) if f.lower().endswith(valid_exts)]
-        
+
         if files:
             files.sort()
             bg_images = [os.path.abspath(os.path.join(theme_folder_path, f)) for f in files]
 
-            if randomize:
+            if theme_randomize:
                 random.shuffle(bg_images)
                 try:
                     from PIL import Image
                     temp_dir = tempfile.TemporaryDirectory()
                     processed_images = []
                     
-                    # Randomly flip images horizontally or vertically to break repetitive patterns
                     for i, img_path in enumerate(bg_images):
                         with Image.open(img_path) as img:
                             if random.choice([True, False]):
@@ -236,21 +265,19 @@ def generate(target, theme="report", image=None, caption=None, outdir=None, rand
                             processed_images.append(f"file://{out_path}")
                     bg_images = processed_images
                 except ImportError:
-                    print("Warning: Pillow is required for flipping backgrounds. Run 'pip install Pillow'.")
                     bg_images = [f"file://{p}" for p in bg_images]
             else:
                 bg_images = [f"file://{p}" for p in bg_images]
 
-            # Generate CSS pseudo-classes to loop the backgrounds continuously
             n = len(bg_images)
             for i, img_path in enumerate(bg_images):
                 b = i + 1
                 nth_rule = f"{n}n+{b}" if b < n else f"{n}n"
                 
+                # Fill the entire page
                 bg_css += f"""
                 @page :nth({nth_rule}) {{
                     background-image: url("{img_path}");
-                    background-size: cover;
                     background-position: center;
                     background-repeat: no-repeat;
                 }}
@@ -313,10 +340,8 @@ if __name__ == "__main__":
     parser.add_argument("--image", default=None, help="URL or local path to add a custom image")
     parser.add_argument("--caption", default=None, help="Caption for the custom image")
     parser.add_argument("--outdir", default=None, help="Folder to save the generated PDF")
-    parser.add_argument("--randomize", default="true", help="Randomize the background images (true/false)")
 
     args = parser.parse_args()
-    randomize_bool = args.randomize.lower() == "true"
 
     try:
         generate(
@@ -324,9 +349,7 @@ if __name__ == "__main__":
             theme=args.theme,
             image=args.image,
             caption=args.caption,
-            outdir=args.outdir,
-            randomize=randomize_bool
+            outdir=args.outdir
         )
     except Exception as e:
         print(f"Error: {e}\n")
-

@@ -16,38 +16,38 @@ scp2pdf.generate(
 
 elements_to_compile = [
     {
-        'target': 173,
-        'theme': 'report',
-        'image': 'https://upload.wikimedia.org/wikipedia/commons/c/c7/MatthewF1.png',
-        'caption': 'Artistic depiction of SCP-173 by ThyCheshireCat',
-        'outdir': './examples',
-    },{
         'target': 35,
         'outdir': './examples',
+        'theme': 'scan',
     },{
         'target': '682',
         'outdir': './examples',
+        'theme': 'scan',
     },{
         'target': 2207,
         'image': 'pictures/SCP-2207.jpg',
         'caption': 'Device as stored on Site-██',
         'outdir': './examples',
+        'theme': 'wrinkled',
     },{
         'target': 2521,
         'outdir': './examples',
+        'theme': 'report',
     },{
         'target': 'https://scp-wiki.wikidot.com/survey-log-1165',
         'outdir': './examples',
+        'theme': 'report',
     },{
         'target': 6003,
         'outdir': './examples',
+        'theme': 'report',
     },{
         'target': 6281,
         'theme': 'book',
         'outdir': './examples',
     },{
         'target': '603',
-        'theme': 'book',
+        'theme': 'scan',
         'outdir': './examples',
     }
 ]

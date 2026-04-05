@@ -150,7 +150,7 @@ body {
     padding: 5px;
     text-align: center;
     font-size: 9pt;
-    background-color: #fff; 
+    background-color: transparent; 
 }
 
 .scp-image-block img {
@@ -177,7 +177,7 @@ body {
 
 blockquote {
     border: 2px solid #333;
-    background-color: rgba(255, 255, 255, 0.85);
+    background-color: transparent; 
     padding: 15px;
     margin: 15px 0;
 }
