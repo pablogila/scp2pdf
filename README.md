@@ -61,20 +61,23 @@ The same custom arguments can be used with the Python API:
 
 ```python
 import scp2pdf
-scp2pdf.generate_pdf(
+scp2pdf.generate(
     target="173",
-    theme="default",
+    theme="report",
     image="https://upload.wikimedia.org/wikipedia/commons/c/c7/MatthewF1.png",
     caption="Artistic depiction of SCP-173 by ThyCheshireCat",
     outdir="./examples"
 )
 ```
 
+The `examples.py` script contains more usage examples,
+and it is used to generate the sample PDF files in the `examples/` directory.
+
 
 ## Custom Themes
 
 Themes are controlled by matching HTML and CSS templates stored in the `themes/` directory.
-If no theme is specified, the `default` theme will be used.
+If no theme is specified, the `report` theme will be used by default.
 
 
 ## Contributing

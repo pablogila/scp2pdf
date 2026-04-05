@@ -9,12 +9,12 @@ from jinja2 import Environment, FileSystemLoader
 from weasyprint import HTML
 
 
-VERSION = "v1.0.3"
+VERSION = "v1.1.0"
 
 
 def _fetch_html(url):
     """Fetches the raw HTML content from a given URL."""
-    print(f"Fetching content from {url}...")
+    print(f"Fetching {url} ...")
     response = requests.get(url)
     response.raise_for_status()
     return response.text
@@ -197,7 +197,7 @@ def _process_document_content(raw_html, base_url, fallback_title):
     }
 
 
-def generate_pdf(target, theme="default", image=None, caption=None, outdir=None):
+def generate(target, theme="report", image=None, caption=None, outdir=None):
     """
     Compiles an SCP entry or tale into a styled PDF.
 
@@ -207,7 +207,8 @@ def generate_pdf(target, theme="default", image=None, caption=None, outdir=None)
     caption (str): Optional caption for the custom image.
     outdir (str): Optional directory path to save the generated PDF.
     """
-    print(f"Processing SCP {target}...")
+    target = str(target).strip()
+    print(f"\nProcessing SCP {target} ...")
 
     base_dir = os.path.dirname(os.path.abspath(__file__))
     themes_dir = os.path.join(base_dir, 'themes')
@@ -260,16 +261,16 @@ def generate_pdf(target, theme="default", image=None, caption=None, outdir=None)
         scp2pdf_version=VERSION
     )
 
-    print(f"Generating PDF...")
+    print(f"Generating PDF ...")
     HTML(string=rendered_html, base_url=base_dir).write_pdf(output_filename)
-    print(f"Saved as {output_filename}")
+    print(f"Saved as {output_filename}\n")
 
     return output_filename
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate a printable PDF for an SCP entry or tale.")
     parser.add_argument("target", help="The SCP number (e.g., '035') or URL")
-    parser.add_argument("--theme", default="default", help="Name of the theme in the themes/ folder")
+    parser.add_argument("--theme", default="report", help="Name of the theme in the themes/ folder")
     parser.add_argument("--image", default=None, help="URL or local path to add a custom image")
     parser.add_argument("--caption", default=None, help="Caption for the custom image")
     parser.add_argument("--outdir", default=None, help="Folder to save the generated PDF")
@@ -277,7 +278,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     try:
-        generate_pdf(
+        generate(
             target=args.target, 
             theme=args.theme,
             image=args.image,
@@ -285,4 +286,5 @@ if __name__ == "__main__":
             outdir=args.outdir
         )
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error: {e}\n")
+
