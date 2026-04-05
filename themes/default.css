@@ -1,41 +1,14 @@
 @page {
     size: A4;
     margin: 2cm 2cm 3cm 2cm; 
-    
+
+    @bottom-left { content: none; }
+    @bottom-right { content: none; }
+
     @bottom-center {
-        content: "CLASSIFIED";
-        font-family: "Courier New", Courier, monospace;
-        font-size: 22pt;
-        font-weight: bold;
-        letter-spacing: 2px;
-        vertical-align: top;
-        padding-top: 15px;
-    }
-
-    @bottom-left {
-        content: "RESTRICTED TO AUTHORIZED PERSONNEL ONLY";
-        font-family: "Courier New", Courier, monospace;
-        font-size: 15pt;
-        font-weight: bold;
+        content: element(page-footer);
+        width: 100%;
         vertical-align: bottom;
-        padding-bottom: 20px;
-        white-space: nowrap; 
-    }
-
-    @bottom-right {
-        content: "Page " counter(page) " of " counter(pages);
-        font-family: "Courier New", Courier, monospace;
-        font-size: 10pt;
-        font-weight: bold;
-        vertical-align: bottom;
-        padding-bottom: 20px;
-        white-space: nowrap;
-        
-        /* Adds the SCP emblem anchored above the page number */
-        background-image: url("logos/SCP_Foundation_emblem.svg");
-        background-size: 80px;
-        background-repeat: no-repeat;
-        background-position: right top 15px;
     }
 }
 
@@ -45,6 +18,74 @@ body {
     line-height: 1.4;
     color: #111;
     background-color: #fff;
+}
+
+#page-footer {
+    position: running(page-footer);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; 
+    height: 100%;
+}
+
+.footer-row-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.footer-row-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    width: 100%;
+    padding-bottom: 20px;
+}
+
+.footer-scp-number {
+    flex: 1;
+    font-size: 10pt;
+    font-weight: bold;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.footer-classified {
+    flex: 1;
+    font-size: 22pt;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.footer-logo {
+    flex: 1;
+    text-align: right;
+}
+
+.footer-logo img {
+    width: 87px;
+    height: auto;
+}
+
+.footer-restricted {
+    font-size: 15pt;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.footer-page-number {
+    font-size: 10pt;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.footer-page-number::after {
+    content: "Page " counter(page) " of " counter(pages);
 }
 
 .header-container {
@@ -93,9 +134,6 @@ body {
 .meta-row-description .meta-value {
     white-space: normal;
 }
-
-/* Hooks for specific table rows.
-Add display: none; to hide specific fields. */
 
 .header-divider {
     border-top: 4px solid #000;

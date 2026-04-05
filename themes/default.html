@@ -8,11 +8,24 @@
     </style>
 </head>
 <body>
+    <div id="page-footer">
+        <div class="footer-row-top">
+            <div class="footer-scp-number">{% if is_scp %}{{ item_number }}{% else %}{{ item_number }}{% endif %}</div>
+            <div class="footer-classified">CLASSIFIED</div>
+            <div class="footer-logo">
+                <img src="logos/SCP_Foundation_emblem.svg" alt="SCP Emblem">
+            </div>
+        </div>
+        <div class="footer-row-bottom">
+            <div class="footer-restricted">RESTRICTED TO AUTHORIZED PERSONNEL ONLY</div>
+            <div class="footer-page-number"></div> </div>
+    </div>
+
     <div class="header-container">
         <div class="logo">
             <img src="logos/SCP_Secure_Contain_Protect_emblem.svg" alt="SCP Foundation">
         </div>
-        
+
         <div class="metadata">
             <table>
                 {% if is_scp %}
@@ -27,40 +40,44 @@
                 </tr>
                 {% endif %}
                 <tr class="meta-row-object">
-                    <td class="meta-label">Object Class</td>
+                    <td class="meta-label">Object class</td>
                     <td class="meta-value">{{ object_class }}</td>
                 </tr>
                 {% if acs.disruption %}
                 <tr class="meta-row-disruption">
-                    <td class="meta-label">Disruption Class</td>
+                    <td class="meta-label">Disruption class</td>
                     <td class="meta-value">{{ acs.disruption }}</td>
                 </tr>
                 {% endif %}
                 {% if acs.risk %}
                 <tr class="meta-row-risk">
-                    <td class="meta-label">Risk Class</td>
+                    <td class="meta-label">Risk class</td>
                     <td class="meta-value">{{ acs.risk }}</td>
                 </tr>
                 {% endif %}
                 {% if acs.secondary %}
                 <tr class="meta-row-secondary">
-                    <td class="meta-label">Secondary Class</td>
+                    <td class="meta-label">Secondary class</td>
                     <td class="meta-value">{{ acs.secondary }}</td>
                 </tr>
                 {% endif %}
-                
-                {% else %}
-                <tr class="meta-row-document">
-                    <td class="meta-label">Document</td>
+
+                {% else %} <!-- Non-SCP entry; could be a log entry, tale, etc. -->
+                <tr class="meta-row-report">
+                    <td class="meta-label">Report</td>
                     <td class="meta-value">{{ item_number }}</td>
+                </tr>
+                <tr class="meta-row-classified">
+                    <td class="meta-label">Clearance status</td>
+                    <td class="meta-value">CLASSIFIED</td>
                 </tr>
                 {% endif %}
             </table>
         </div>
     </div>
-    
+
     <div class="header-divider"></div>
-    
+
     <div class="document-content">
         {% if image %}
         <div class="scp-image-block">
@@ -81,7 +98,7 @@
         {% else %}
             <blockquote>"{{ item_number }}" from the SCP Wiki. Source: <a href="{{ source_url }}">{{ source_url }}</a>. Licensed under CC BY-SA.</blockquote>
         {% endif %}
-        
+
         <blockquote>Doc v{{ document_version }} on {{ retrieval_date }} via https://github.com/pablogila/scp2pdf {{ scp2pdf_version }}</blockquote>
 
         {% if supp_citations %}

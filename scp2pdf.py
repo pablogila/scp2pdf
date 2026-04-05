@@ -9,7 +9,7 @@ from jinja2 import Environment, FileSystemLoader
 from weasyprint import HTML
 
 
-VERSION = "v1.0.1"
+VERSION = "v1.0.2"
 
 
 def _fetch_html(url):
@@ -36,7 +36,7 @@ def _fetch_scp_title(item_number):
             else f"https://scp-wiki.wikidot.com/scp-series-{(num // 1000) + 1}"
 
         soup = BeautifulSoup(requests.get(url).text, 'html.parser')
-        
+
         # Locate the exact anchor tag and extract the title text
         for a_tag in soup.find_all('a', string=lambda text: text and text.strip().upper() == target_text):
             parent = a_tag.find_parent('li')
@@ -65,7 +65,7 @@ def _process_document_content(raw_html, base_url, fallback_title):
     # Extract Core Metadata
     item_match = re.search(r'(?:Item|SCP)\s*#?:\s*([^\n<]+)', text, re.IGNORECASE)
     class_match = re.search(r'(?:Object|Containment) Class:\s*([A-Za-z0-9/\-]+)', text, re.IGNORECASE)
-    
+
     item_number = item_match.group(1).strip() if item_match else fallback_title
     object_class = class_match.group(1).strip().title() if class_match else "N/A"
 
@@ -75,7 +75,7 @@ def _process_document_content(raw_html, base_url, fallback_title):
         for field in ['Disruption', 'Risk', 'Secondary']
     }
 
-    # Process Citations
+    # Process citations
     main_citation, supp_citations = "", []
 
     # Locate the license box, or find it relative to "Cite this page as:"
@@ -98,16 +98,16 @@ def _process_document_content(raw_html, base_url, fallback_title):
     for el in content_div.find_all(lambda tag: tag.has_attr('class') or tag.has_attr('id')):
         if el.attrs is None: 
             continue
-            
+
         raw_class = el.get('class', [])
         if not isinstance(raw_class, list):
             raw_class = [raw_class] if raw_class else []
-            
+
         css = ' '.join(raw_class) + ' ' + str(el.get('id', ''))
         if purge_regex.search(css): 
             el.decompose()
 
-    # Consolidate specific tag cleanups and URL fixing into a single unified pass
+    # Tag cleanups and URL fixing
     for el in content_div.find_all(['div', 'a', 'span', 'p', 'img']):
         if not el.parent or el.attrs is None: 
             continue # Skip if already decomposed by a parent or lacks attributes
@@ -143,7 +143,7 @@ def _process_document_content(raw_html, base_url, fallback_title):
             elif child_text:
                 break # Stop at the first real content
 
-    # Process collapsibles safely
+    # Process collapsibles
     for coll in content_div.find_all('div', class_='collapsible-block'):
         if coll.attrs is None: 
             continue
