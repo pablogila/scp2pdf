@@ -83,6 +83,12 @@ Do you want to share your own themes or improvements? Feel free to submit a pull
 
 ## License
 
+The original [SCP logo](https://commons.wikimedia.org/wiki/File:SCP_Foundation_(emblem).svg)
+is licensed under CC BY-SA 3.0.
+Derivative logos under the `logos/` directory also follow the same license.
+
+The scp2pdf software itself is licensed under GNU AGPL v3.0 or later:
+
     scp2pdf - Compile SCP entries into stylish PDF reports.
     Copyright (C) 2026 Pablo Gila-Herranz.
 

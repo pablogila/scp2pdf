@@ -30,6 +30,12 @@
         vertical-align: bottom;
         padding-bottom: 20px;
         white-space: nowrap;
+        
+        /* Adds the SCP emblem anchored above the page number */
+        background-image: url("logos/SCP_Foundation_emblem.svg");
+        background-size: 80px;
+        background-repeat: no-repeat;
+        background-position: right top 15px;
     }
 }
 
@@ -45,6 +51,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
     margin-bottom: 5px;
 }
 
@@ -53,10 +60,16 @@ body {
     border: none;
 }
 
+.metadata {
+    margin-left: auto;
+    max-width: 60%;
+}
+
 .metadata table {
     width: 320px;
+    max-width: 100%;
     border-collapse: collapse;
-    margin: 0;
+    margin: 0 0 0 auto;
 }
 
 .metadata td {
@@ -81,10 +94,8 @@ body {
     white-space: normal;
 }
 
-/* Hooks for specific table rows. Add display: none; to hide specific fields.
-Available hooks: .meta-row-item, .meta-row-object, .meta-row-disruption, 
-.meta-row-risk, .meta-row-secondary, .meta-row-document
-*/
+/* Hooks for specific table rows.
+Add display: none; to hide specific fields. */
 
 .header-divider {
     border-top: 4px solid #000;

@@ -1,5 +1,6 @@
 # Custom
 .venv/
+SCP/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
