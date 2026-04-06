@@ -11,7 +11,7 @@ from jinja2 import Environment, FileSystemLoader
 from weasyprint import HTML
 
 
-VERSION = "v1.2.0"
+VERSION = "v1.3.0"
 
 
 def _fetch_html(url):
@@ -233,7 +233,7 @@ def generate(target, theme="report", image=None, caption=None, outdir=None):
     meta_rand = soup_template.find('meta', {'name': 'theme-randomize'})
     theme_randomize = meta_rand and meta_rand.get('content', '').lower() == 'true'
 
-    # Dynamic background Logic
+    # Dynamic background logic
     bg_css = ""
     temp_dir = None
     theme_folder_path = os.path.join(themes_dir, theme)

@@ -94,6 +94,13 @@ Themes with backgrounds have them randomized by default.
   <img width="30.0%" src="./pictures/theme_scan_2.png" style="margin-right: 10px;">
 </p>
 
+### badscan
+
+<p align="center">
+  <img width="30.0%" src="./pictures/theme_badscan_1.png" style="margin-right: 10px;">
+  <img width="30.0%" src="./pictures/theme_badscan_2.png" style="margin-right: 10px;">
+</p>
+
 ### wrinkled
 
 <p align="center">
@@ -101,13 +108,20 @@ Themes with backgrounds have them randomized by default.
   <img width="30.0%" src="./pictures/theme_wrinkled_2.png" style="margin-right: 10px;">
 </p>
 
+### shredded
+
+<p align="center">
+  <img width="30.0%" src="./pictures/theme_shredded_1.png" style="margin-right: 10px;">
+  <img width="30.0%" src="./pictures/theme_shredded_2.png" style="margin-right: 10px;">
+</p>
+
 
 ## Custom themes
 
-Themes are controlled by matching HTML and CSS templates stored in the `themes/` directory.
+Themes are controlled by matching HTML and CSS templates stored in the `themes/` directory. Fonts, logos, item placement and everything else can be customized from those files.
 Custom backgrounds can also be included inside a folder with the same name as the HTML and CSS files.
 The background images can be randomly rotated and flipped with the
-`theme-randomize` meta tag in the HTML template, see the `scan` theme as an example.
+`theme-randomize` meta tag in the HTML template, see the `scan` theme as reference.
 
 
 ## Contributing
