@@ -48,7 +48,7 @@ You could also specify custom options with flags like `--theme`, `--image`, `--c
 
 ```bash
 python scp2pdf.py 173 \
-  --theme default \
+  --theme report \
   --image https://upload.wikimedia.org/wikipedia/commons/c/c7/MatthewF1.png \
   --caption "Artistic depiction of SCP-173 by ThyCheshireCat" \
   --outdir "./examples"

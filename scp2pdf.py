@@ -11,7 +11,7 @@ from jinja2 import Environment, FileSystemLoader
 from weasyprint import HTML
 
 
-VERSION = "v1.3.0"
+VERSION = "v1.3.1"
 
 
 def _fetch_html(url):
